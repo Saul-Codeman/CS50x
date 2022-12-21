@@ -1,0 +1,41 @@
+sort1 uses: Bubble sort
+
+How do you know?: Bubble sort went faster through the sorted files than selection sort, which is likely do to it only having to make one sweep since
+all of the comparisons were in order.
+Time of random5000.txt: 0.178s
+Time of random10000.txt: 0.322s
+Time of random50000.txt: 7.432s
+Time of reversed5000.txt: 0.069s
+Time of reversed10000.txt: 0.249s
+Time of reversed50000.txt: 5.646s
+Time of sorted5000.txt: 0.043s
+Time of sorted10000.txt: 0.074s
+Time of sorted50000.txt: 0.520s
+
+
+sort2 uses: Merge sort
+
+How do you know?: Merge sort was the fastest. This was likely due to it being implemented recursively and having nlogn.
+Time of random5000.txt: 0.022s
+Time of random10000.txt: 0.062s
+Time of random50000.txt: 0.443s
+Time of reversed5000.txt: 0.045s
+Time of reversed10000.txt: 0.085s
+Time of reversed50000.txt: 0.538s
+Time of sorted5000.txt: 0.040s
+Time of sorted10000.txt: 0.089s
+Time of sorted50000.txt: 0.385s
+
+sort3 uses: Selection sort
+
+How do you know?: Selection sort was faster than bubble sort for random and reversed. This is because it picks the overall smallest numbers and
+brings them to the front. This makes the list smaller as it goes and also prevents the misplacing of text.
+Time of random5000.txt: 0.084s
+Time of random10000.txt: 0.171s
+Time of random50000.txt: 3.039s
+Time of reversed5000.txt: 0.064s
+Time of reversed10000.txt: 0.194s
+Time of reversed50000.txt: 3.077s
+Time of sorted5000.txt: 0.110s
+Time of sorted10000.txt: 0.184s
+Time of sorted50000.txt: 3.459s
