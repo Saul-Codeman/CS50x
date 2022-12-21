@@ -1,0 +1,84 @@
+// Detect edges
+void edges(int height, int width, RGBTRIPLE image[height][width])
+{
+    // Grayscale the image to make all the pixel rgb values the same.
+    for (int i = 0; i < height; i++){
+        for (int j = 0; j < width; j++){
+            int average_rgb = round((image[i][j].rgbtRed + image[i][j].rgbtGreen + image[i][j].rgbtBlue) / 3.0);
+            // Might need to turn image into copy
+            image[i][j].rgbtRed = average_rgb;
+            image[i][j].rgbtGreen = average_rgb;
+            image[i][j].rgbtBlue = average_rgb;
+        }
+    }
+    // Copy of grayscaled image
+    RGBTRIPLE copy[height][width];
+    for (int i = 0; i < height; i++){
+        for (int j = 0; j < width; j++){
+            copy[i][j] = image[i][j];
+        }
+    }
+    // Now we can start with edge
+    for (int i = 0; i < height; i++){
+        for (int j = 0; j < width; j++){
+            // if the outer pixels are exceeding the bounds, the rgb values are considered 0.
+            // Get Gx first where [i][j-1] is multiplied by -2 and the other j - 1 multiplied by - 1.
+            // Get both Gx and Gy at the same time
+            int Gx = 0;
+            int Gy = 0;
+            // Top left
+            if (!is_exceeding_bounds(i - 1, j - 1, height, width)){
+                Gx += copy[i - 1][j - 1].rgbtRed * -1;
+                Gy += copy[i - 1][j - 1].rgbtRed * -1;
+            }
+            // Top middle
+            if (!is_exceeding_bounds(i - 1, j, height, width)){
+                Gx += copy[i - 1][j].rgbtRed * 0;
+                Gy += copy[i - 1][j].rgbtRed * -2;
+            }
+            // Top right
+            if (!is_exceeding_bounds(i - 1, j + 1, height, width)){
+                Gx += copy[i - 1][j + 1].rgbtRed * 1;
+                Gy += copy[i - 1][j + 1].rgbtRed * -1;
+            }
+            // Middle left
+            if (!is_exceeding_bounds(i, j - 1, height, width)){
+                Gx += copy[i][j - 1].rgbtRed * -2;
+                Gy += copy[i][j - 1].rgbtRed * 0;
+            }
+            // Middle
+            if (!is_exceeding_bounds(i, j, height, width)){
+                Gx += copy[i][j].rgbtRed * 0;
+                Gy += copy[i][j].rgbtRed * 0;
+            }
+            // Middle right
+            if (!is_exceeding_bounds(i, j + 1, height, width)){
+                Gx += copy[i][j + 1].rgbtRed * 2;
+                Gy += copy[i][j + 1].rgbtRed * 0;
+            }
+            // Bottom left
+            if (!is_exceeding_bounds(i + 1, j - 1, height, width)){
+                Gx += copy[i + 1][j - 1].rgbtRed * -1;
+                Gy += copy[i + 1][j - 1].rgbtRed * 1;
+            }
+            // Bottom middle
+            if (!is_exceeding_bounds(i + 1, j, height, width)){
+                Gx += copy[i + 1][j].rgbtRed * 0;
+                Gy += copy[i + 1][j].rgbtRed * 2;
+            }
+            // Bottom right
+            if (!is_exceeding_bounds(i + 1, j + 1, height, width)){
+                Gx += copy[i + 1][j + 1].rgbtRed * 1;
+                Gy += copy[i + 1][j + 1].rgbtRed * 1;
+            }
+            int G = round(Gx * Gx + Gy * Gy);
+            if (G > 255){
+                G = 255;
+            }
+            image[i][j].rgbtRed = G;
+            image[i][j].rgbtGreen = G;
+            image[i][j].rgbtBlue = G;
+        }
+    }
+    return;
+}

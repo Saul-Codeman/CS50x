@@ -1,0 +1,35 @@
+void lock_pairs(void)
+{
+    // TODO
+    // If adding a locked pair makes a specific column of a candidate true, stop so you dont create a cycle.
+    int true_count[candidate_count];
+    int lock_count = pair_count * pair_count;
+    for (int i = 0; i < lock_count; i++){
+        locked[pairs[i].winner][pairs[i].loser] = true;
+        for (int j = 0; j < candidate_count; j++){
+            true_count[j] = 0;
+            // Going through each candidate's locked array to find a true.
+            // True_count determines if a candidate has any trues in their locked array.
+            // If a true is found, it is added to true_count.
+            for (int k = 0; k < candidate_count; k++){
+                if (locked[k][j]){
+                    true_count[j]++;
+                    // If the true count is greater than 0, a true was found in that locked array for that candidate.
+                    // If the true count is greater than 0 for all candidates (check if true_count[i] + 1
+                    // makes them all true), then the previous step needs to be reversed.
+                    int count = 0;
+                    for (int l = 0; l < candidate_count; l++){
+                        if (true_count[l] > 0){
+                            count++;
+                            if (count == candidate_count){
+                                locked[pairs[i].winner][pairs[i].loser] = false;
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return;
+}

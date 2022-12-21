@@ -1,0 +1,179 @@
+#include "helpers.h"
+#include <math.h>
+#include <cs50.h>
+#include <stdio.h>
+
+
+
+void blur(int height, int width, RGBTRIPLE image[height][width])
+{
+    // Copy of image
+    RGBTRIPLE copy[height][width];
+    for (int i = 0; i < height; i++){
+        for (int j = 0; j < width; j++){
+            copy[i][j] = image[i][j];
+        }
+    }
+    // Get the pixel of an image
+    for (int i = 0; i < height; i++){
+        for (int j = 0; j < width; j++){
+            // We will need values around image[i][j] including i + or - 1 and j + or - 1
+            int average_red = 0;
+            int average_green = 0;
+            int average_blue = 0;
+            int count = 0;
+            // Adding up all rgb values within the bounds
+            average_red += copy[i][j].rgbtRed;
+            average_green += copy[i][j].rgbtGreen;
+            average_blue += copy[i][j].rgbtBlue;
+            count++;
+            if (!is_exceeding_bounds(i + 1, j + 1, height, width)){
+                average_red += copy[i + 1][j + 1].rgbtRed;
+                average_green += copy[i + 1][j + 1].rgbtGreen;
+                average_blue += copy[i + 1][j + 1].rgbtBlue;
+                count++;
+            }
+            if (!is_exceeding_bounds(i + 1, j, height, width)){
+                average_red += copy[i + 1][j].rgbtRed;
+                average_green += copy[i + 1][j].rgbtGreen;
+                average_blue += copy[i + 1][j].rgbtBlue;
+                count++;
+            }
+            if (!is_exceeding_bounds(i + 1, j - 1, height, width)){
+                average_red += copy[i + 1][j - 1].rgbtRed;
+                average_green += copy[i + 1][j - 1].rgbtGreen;
+                average_blue += copy[i + 1][j - 1].rgbtBlue;
+                count++;
+            }
+            if (!is_exceeding_bounds(i, j + 1, height, width)){
+                average_red += copy[i][j + 1].rgbtRed;
+                average_green += copy[i][j + 1].rgbtGreen;
+                average_blue += copy[i][j + 1].rgbtBlue;
+                count++;
+            }
+            if (!is_exceeding_bounds(i, j - 1, height, width)){
+                average_red += copy[i][j - 1].rgbtRed;
+                average_green += copy[i][j - 1].rgbtGreen;
+                average_blue += copy[i][j - 1].rgbtBlue;
+                count++;
+            }
+            if (!is_exceeding_bounds(i - 1, j + 1, height, width)){
+                average_red += copy[i - 1][j + 1].rgbtRed;
+                average_green += copy[i - 1][j + 1].rgbtGreen;
+                average_blue += copy[i - 1][j + 1].rgbtBlue;
+                count++;
+            }
+            if (!is_exceeding_bounds(i - 1, j, height, width)){
+                average_red += copy[i - 1][j].rgbtRed;
+                average_green += copy[i - 1][j].rgbtGreen;
+                average_blue += copy[i - 1][j].rgbtBlue;
+                count++;
+            }
+            if (!is_exceeding_bounds(i - 1, j - 1, height, width)){
+                average_red += copy[i - 1][j - 1].rgbtRed;
+                average_green += copy[i - 1][j - 1].rgbtGreen;
+                average_blue += copy[i - 1][j - 1].rgbtBlue;
+                count++;
+            }
+            image[i][j].rgbtRed = average_red / count;
+            image[i][j].rgbtGreen = average_green / count;
+            image[i][j].rgbtBlue = average_blue / count;
+        }
+    }
+    return;
+}
+
+// Blur image
+void blur(int height, int width, RGBTRIPLE image[height][width])
+{
+    // Copy of image
+    RGBTRIPLE copy[height][width];
+    for (int i = 0; i < height; i++){
+        for (int j = 0; j < width; j++){
+            copy[i][j] = image[i][j];
+        }
+    }
+    // Get the pixel of an image
+    for (int i = 0; i < height; i++){
+        for (int j = 0; j < width; j++){
+            // We will need values around image[i][j] including i + or - 1 and j + or - 1
+            int average_red = 0;
+            int average_green = 0;
+            int average_blue = 0;
+            // Adding up all rgb values within the bounds
+            average_red += copy[i][j].rgbtRed;
+            average_green += copy[i][j].rgbtGreen;
+            average_blue += copy[i][j].rgbtBlue;
+            int counter;
+            // Determine which position the pixel is at.
+            // Top left corner
+            if (i - 1 < 0 && j - 1 < 0){
+                average_red += copy[i][j + 1].rgbtRed + copy[i + 1][j].rgbtRed + copy[i + 1][j + 1].rgbtRed;
+                average_green += copy[i][j + 1].rgbtGreen + copy[i + 1][j].rgbtGreen + copy[i + 1][j + 1].rgbtGreen;
+                average_blue += copy[i][j + 1].rgbtBlue + copy[i + 1][j].rgbtBlue + copy[i + 1][j + 1].rgbtBlue;
+                counter = 4;
+            }
+            // Top right corner
+            else if (i + 1 > height && j + 1 > width){
+                average_red += copy[i][j - 1].rgbtRed + copy[i + 1][j].rgbtRed + copy[i + 1][j - 1].rgbtRed;
+                average_green += copy[i][j -1].rgbtGreen + copy[i + 1][j].rgbtGreen + copy[i + 1][j - 1].rgbtGreen;
+                average_blue += copy[i][j -1].rgbtBlue + copy[i + 1][j].rgbtBlue + copy[i + 1][j - 1].rgbtBlue;
+                counter = 4;
+            }
+            // Bottom left corner
+            else if (i + 1 > height && j - 1 < 0){
+                average_red += copy[i][j + 1].rgbtRed + copy[i - 1][j].rgbtRed + copy[i - 1][j + 1].rgbtRed;
+                average_green += copy[i][j + 1].rgbtGreen + copy[i - 1][j].rgbtGreen + copy[i - 1][j + 1].rgbtGreen;
+                average_blue += copy[i][j + 1].rgbtBlue + copy[i - 1][j].rgbtBlue + copy[i - 1][j + 1].rgbtBlue;
+                counter = 4;
+            }
+            // Bottom right corner
+            else if (i + 1 > height && j + 1 > width){
+                average_red += copy[i][j - 1].rgbtRed + copy[i - 1][j].rgbtRed + copy[i - 1][j - 1].rgbtRed;
+                average_green += copy[i][j - 1].rgbtGreen + copy[i - 1][j].rgbtGreen + copy[i - 1][j - 1].rgbtGreen;
+                average_blue += copy[i][j - 1].rgbtBlue + copy[i - 1][j].rgbtBlue + copy[i - 1][j - 1].rgbtBlue;
+                counter = 4;
+            }
+            // Left edge
+            else if (j - 1 < 0){
+                average_red += copy[i][j + 1].rgbtRed + copy[i - 1][j].rgbtRed + copy[i - 1][j + 1].rgbtRed + copy[i + 1][j].rgbtRed + copy[i + 1][j + 1].rgbtRed;
+                average_green += copy[i][j + 1].rgbtGreen + copy[i - 1][j].rgbtGreen + copy[i - 1][j + 1].rgbtGreen + copy[i + 1][j].rgbtGreen + copy[i + 1][j + 1].rgbtGreen;
+                average_blue += copy[i][j + 1].rgbtBlue + copy[i - 1][j].rgbtBlue + copy[i - 1][j + 1].rgbtBlue + copy[i + 1][j].rgbtBlue + copy[i + 1][j + 1].rgbtBlue;
+                counter = 6;
+            }
+            // Right edge
+            else if (j > width){
+                average_red += copy[i][j - 1].rgbtRed + copy[i - 1][j].rgbtRed + copy[i - 1][j - 1].rgbtRed + copy[i + 1][j].rgbtRed + copy[i + 1][j - 1].rgbtRed;
+                average_green += copy[i][j - 1].rgbtGreen + copy[i - 1][j].rgbtGreen + copy[i - 1][j - 1].rgbtGreen + copy[i + 1][j].rgbtGreen + copy[i + 1][j - 1].rgbtGreen;
+                average_blue += copy[i][j - 1].rgbtBlue + copy[i - 1][j].rgbtBlue + copy[i - 1][j - 1].rgbtBlue + copy[i + 1][j].rgbtBlue + copy[i + 1][j - 1].rgbtBlue;
+                counter = 6;
+            }
+            // Top edge
+            else if (i - 1 < 0){
+                average_red += copy[i][j + 1].rgbtRed + copy[i][j - 1].rgbtRed + copy[i + 1][j].rgbtRed + copy[i + 1][j + 1].rgbtRed + copy[i + 1][j - 1].rgbtRed;
+                average_green += copy[i][j + 1].rgbtGreen + copy[i][j - 1].rgbtGreen + copy[i + 1][j].rgbtGreen + copy[i + 1][j + 1].rgbtGreen + copy[i + 1][j - 1].rgbtGreen;
+                average_blue += copy[i][j + 1].rgbtBlue + copy[i][j - 1].rgbtBlue + copy[i + 1][j].rgbtBlue + copy[i + 1][j + 1].rgbtBlue + copy[i + 1][j - 1].rgbtBlue;
+                counter = 6;
+            }
+            // Bottom edge
+            else if (i + 1 > height){
+                average_red += copy[i][j + 1].rgbtRed + copy[i][j - 1].rgbtRed + copy[i - 1][j].rgbtRed + copy[i - 1][j + 1].rgbtRed + copy[i - 1][j - 1].rgbtRed;
+                average_green += copy[i][j + 1].rgbtGreen + copy[i][j - 1].rgbtGreen + copy[i - 1][j].rgbtGreen + copy[i - 1][j + 1].rgbtGreen + copy[i - 1][j - 1].rgbtGreen;
+                average_blue += copy[i][j + 1].rgbtBlue + copy[i][j - 1].rgbtBlue + copy[i - 1][j].rgbtBlue + copy[i - 1][j + 1].rgbtBlue + copy[i - 1][j - 1].rgbtBlue;
+                counter = 6;
+            }
+            // Middle
+            else{
+                average_red += copy[i][j + 1].rgbtRed + copy[i][j - 1].rgbtRed + copy[i - 1][j].rgbtRed + copy[i - 1][j + 1].rgbtRed + copy[i - 1][j - 1].rgbtRed + copy[i + 1][j].rgbtRed + copy[i + 1][j + 1].rgbtRed + copy[i + 1][j - 1].rgbtRed;
+                average_green +=copy[i][j + 1].rgbtGreen + copy[i][j - 1].rgbtGreen + copy[i - 1][j].rgbtGreen + copy[i - 1][j + 1].rgbtGreen + copy[i - 1][j - 1].rgbtGreen + copy[i + 1][j].rgbtGreen + copy[i + 1][j + 1].rgbtGreen + copy[i + 1][j - 1].rgbtGreen;
+                average_blue += copy[i][j + 1].rgbtBlue + copy[i][j - 1].rgbtBlue + copy[i - 1][j].rgbtBlue + copy[i - 1][j + 1].rgbtBlue + copy[i - 1][j - 1].rgbtBlue+ copy[i + 1][j].rgbtBlue + copy[i + 1][j + 1].rgbtBlue + copy[i + 1][j - 1].rgbtBlue;
+                counter = 9;
+            }
+
+            image[i][j].rgbtRed = round(average_red / counter);
+            image[i][j].rgbtGreen = round(average_green / counter);
+            image[i][j].rgbtBlue = round(average_blue / counter);
+        }
+    }
+    return;
+}
