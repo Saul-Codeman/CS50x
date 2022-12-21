@@ -1,0 +1,11 @@
+Table created using SQL
+CREATE TABLE "transactions" (
+	'trans_id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+	'user_id' INTEGER NOT NULL,
+	'symbol' INTEGER NOT NULL,
+	'shares' INTEGER NOT NULL,
+	'price' REAL NOT NULL,
+	'operation' TEXT NOT NULL,
+	'time' DATETIME NOT NULL,
+	'name' TEXT NOT NULL
+);
