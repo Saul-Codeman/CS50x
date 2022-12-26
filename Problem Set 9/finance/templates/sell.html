@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Log In
+{% endblock %}
+
+{% block main %}
+    <form action="/sell" method="POST">
+        <div class="mb-3">
+           <select class="form-select mx-auto w-auto" name="symbol" id="symbol">
+                <option disabled selected>Symbol</option>
+                <!--Add a Jquery for loop for each symbol of stock that the user owns-->
+                {% for share in shares %}
+                <option>{{ share.symbol }}</option>
+                <!--Endfor loop-->
+                {% endfor %}
+           </select>
+        </div>
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="shares" name="shares" placeholder="Shares" type="text">
+        </div>
+        <div class="mb-3">
+            <button class="btn btn-primary" type="submit">Sell</button>
+        </div>
+    </form>
+
+
+{% endblock %}
